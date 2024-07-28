@@ -27,3 +27,12 @@ body {
     display: block;
 }
 
+#tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px;
+    font-size: 12px;
+    font-family: Arial;
+    display: none;
+}
