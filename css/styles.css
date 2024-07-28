@@ -3,37 +3,41 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    overflow: hidden; /* Prevents scrolling */
 }
 
 #content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers content horizontally */
+    justify-content: center;
+    height: 90vh; /* Ensures content fits within the viewport */
+    box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
 }
 
 .slide {
     display: none;
+    text-align: center; /* Centers text content horizontally */
+    width: 100%;
 }
 
 .slide.active {
     display: block;
 }
 
-.pie-container, .bar-container, .line-container {
-    width: 100%;
+.pie-container, .scatter-container, .line-container {
+    width: 80%; /* Ensures charts are not too wide */
     height: 500px;
-    margin: 20px 0;
-}
-
-#line-chart {
-    width: 100%;
-    height: 500px;
-    margin: 20px 0;
+    margin: 20px auto; /* Centers the charts horizontally */
 }
 
 #navigation {
     text-align: center;
     margin-top: 20px;
+    width: 100%;
 }
 
 #navigation button {
@@ -56,6 +60,10 @@ h2 {
 
 ul {
     padding-left: 20px;
+    text-align: left; /* Ensures list items are aligned to the left */
+    display: inline-block;
+    max-width: 80%; /* Limits the width of the list */
+    margin: 0 auto;
 }
 
 ul li {
@@ -64,4 +72,15 @@ ul li {
 
 #intro ul, #intro p {
     text-align: justify;
+}
+
+.tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px;
+    font-size: 12px;
+    font-family: Arial;
+    display: none;
+    pointer-events: none;
 }
