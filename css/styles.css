@@ -1,33 +1,29 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
 }
 
-.slideshow-container {
-    width: 80%;
-    margin: auto;
+#navigation {
+    margin: 20px;
+    text-align: center;
+}
+
+#navigation button {
+    padding: 10px 20px;
+    margin: 5px;
+}
+
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
 }
 
 .slide {
     display: none;
-    padding: 20px;
-    background: white;
-    margin-top: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .slide.active {
     display: block;
 }
 
-h1, h2 {
-    text-align: center;
-}
-
-.chart {
-    width: 100%;
-    height: 500px;
-}

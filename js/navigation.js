@@ -18,3 +18,5 @@ function prevSlide() {
         showSlide(currentSlide - 1);
     }
 }
+
+showSlide(0);

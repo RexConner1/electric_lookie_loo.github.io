@@ -10,51 +10,20 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 </head>
 <body>
-    <div id="slide1" class="slide active">
-        <h1>Electric Vehicle Data Visualization</h1>
-        <p>Welcome to the Electric Vehicle Data Visualization project. In this presentation, you will explore:</p>
-        <ul>
-            <li>The distribution of electric vehicles across various counties</li>
-            <li>Popular electric vehicle models and their types</li>
-            <li>Comparison of prices between electric and non-electric vehicles</li>
-            <li>Fuel and electricity prices over recent years</li>
-        </ul>
-        <p>Each slide provides detailed visualizations and insights to help you understand the growing trend of electric vehicles.</p>
-        <button onclick="nextSlide()">Start</button>
+    <div id="content">
+        <div id="slide1" class="slide"></div>
+        <div id="slide2" class="slide"></div>
+        <div id="slide3" class="slide"></div>
+        <div id="slide4" class="slide"></div>
     </div>
-    <div id="slide2" class="slide">
-        <h1>Distribution of Electric Vehicles Across Counties</h1>
-        <p>Electric vehicles (EVs) are becoming increasingly popular. This map shows the distribution of EVs across various counties. Each red dot represents a registered electric vehicle. The density of dots in certain areas indicates the popularity and adoption of EVs in those regions.</p>
-        <div id="ev-distribution-map" class="chart"></div>
+    <div id="navigation">
         <button onclick="prevSlide()">Previous</button>
         <button onclick="nextSlide()">Next</button>
     </div>
-    <div id="slide3" class="slide">
-        <h1>Popular Electric Vehicle Models and Types</h1>
-        <p>This chart displays the most popular electric vehicle models and types. Battery Electric Vehicles (BEVs) are fully electric with no gasoline engine, while Plug-in Hybrid Electric Vehicles (PHEVs) have both an electric motor and a gasoline engine. Let's see which types and models are leading the market.</p>
-        <div id="ev-models-chart" class="chart"></div>
-        <button onclick="prevSlide()">Previous</button>
-        <button onclick="nextSlide()">Next</button>
-    </div>
-    <div id="slide4" class="slide">
-        <h1>Comparison of Electric and Non-Electric Vehicle Prices</h1>
-        <p>How do the prices of electric vehicles compare to their non-electric counterparts? This chart compares the average prices of various car models, highlighting the cost differences between electric and gasoline-powered cars.</p>
-        <div id="car-price-comparison-chart" class="chart"></div>
-        <button onclick="prevSlide()">Previous</button>
-        <button onclick="nextSlide()">Next</button>
-    </div>
-    <div id="slide5" class="slide">
-        <h1>Fuel and Electricity Prices</h1>
-        <p>The running cost of a vehicle is a crucial factor for many buyers. This chart compares the average prices of gasoline and electricity over time, providing insights into the cost-efficiency of electric vehicles compared to traditional gasoline vehicles.</p>
-        <div id="fuel-electricity-prices-chart" class="chart"></div>
-        <button onclick="prevSlide()">Previous</button>
-        <button onclick="nextSlide()">Next</button>
-    </div>
-    <script src="js/main.js"></script>
     <script src="js/navigation.js"></script>
-    <script src="js/distribution.js"></script>
-    <script src="js/models.js"></script>
-    <script src="js/car_price_comparison.js"></script>
-    <script src="js/fuel_electricity_prices.js"></script>
+    <script src="js/slide1.js"></script>
+    <script src="js/slide2.js"></script>
+    <script src="js/slide3.js"></script>
+    <script src="js/slide4.js"></script>
 </body>
 </html>
