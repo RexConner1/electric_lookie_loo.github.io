@@ -41,4 +41,7 @@ Promise.all([
         .on("mouseout", () => {
             graphics3.hideTooltip();
         });
+
+    graphics3.addAxisLabel('x', 'Price ($)');
+    graphics3.addAxisLabel('y', 'Horsepower (Non-EV) / Range (EV)');
 });

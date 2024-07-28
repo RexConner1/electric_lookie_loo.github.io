@@ -44,6 +44,10 @@ Promise.all([
             .y(d => y2(d.price))
         );
 
+    graphics4.addAxisLabel('x', 'Year');
+    graphics4.addAxisLabel('y', 'Price (USD)');
+
+    // Annotations
     const annotations = [
         {
             note: { label: "Gas price spike", title: "Gas Price" },
@@ -64,4 +68,3 @@ Promise.all([
     graphics4.svg.append("g")
         .call(makeAnnotations);
 });
-
