@@ -36,3 +36,17 @@ body {
     font-family: Arial;
     display: none;
 }
+
+.pie-container {
+    display: flex;
+    align-items: center;
+}
+
+#pie-chart {
+    flex: 2;
+}
+
+#pie-legend {
+    flex: 1;
+    margin-left: 20px;
+}
