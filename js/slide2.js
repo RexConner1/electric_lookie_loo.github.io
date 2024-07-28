@@ -34,6 +34,14 @@ document.addEventListener('DOMContentLoaded', function () {
             .on('mouseover', function (event, d) {
                 const [x, y] = d3.pointer(event);
                 graphics2.showTooltip(`Make: ${d.data.make}<br>Count: ${d.data.count}`, x, y);
+
+                g.append('text')
+                    .attr('id', 'hover-text')
+                    .attr('transform', `translate(${arc.centroid(d)})`)
+                    .attr('dy', '0.35em')
+                    .style('text-anchor', 'middle')
+                    .style('font-size', '12px')
+                    .text(`${d.data.make}: ${d.data.count}`);
             })
             .on('mousemove', function (event) {
                 const [x, y] = d3.pointer(event);
@@ -41,17 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .on('mouseout', function () {
                 graphics2.hideTooltip();
+                g.select('#hover-text').remove();
             });
-
-        const label = d3.arc().innerRadius(radius - 80).outerRadius(radius);
-        g.selectAll('text')
-            .data(pie(pieData))
-            .enter().append('text')
-            .attr('transform', d => `translate(${label.centroid(d)})`)
-            .attr('dy', '0.35em')
-            .style('text-anchor', 'middle')
-            .style('font-size', '12px')
-            .text(d => d.data.make);
 
         const legend = graphics2.svg.append('g')
             .attr('transform', `translate(${width - 150}, ${height / 2 - pieData.length * 10})`);
