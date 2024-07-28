@@ -14,13 +14,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 80px);
     box-sizing: border-box;
 }
 
 .slide {
     display: none;
-    text-align: center; /* Centers text content horizontally */
+    text-align: center;
     width: 100%;
 }
 
@@ -29,8 +29,8 @@ body {
 }
 
 .pie-container, .scatter-container, .line-container {
-    width: 80%;
-    height: calc(100vh - 200px);
+    width: 70%;
+    height: calc(80vh - 200px);
     margin: 20px auto;
 }
 

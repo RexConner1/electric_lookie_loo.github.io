@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const width = 800;
+    const width = 700;
     const height = 500;
     const margin = { top: 20, right: 30, bottom: 50, left: 60 };
 
@@ -55,19 +55,24 @@ document.addEventListener('DOMContentLoaded', function () {
         graphics4.addAxisLabel('x', 'Year');
         graphics4.addAxisLabel('y', 'Price (USD)');
 
-        // Annotations
-        const annotations = [
-            {
-                note: { label: "Gas price spike", title: "Gas Price" },
-                x: x(new Date("Jul-2008")), y: y(4.5),
-                dy: -50, dx: 50
-            },
-            {
-                note: { label: "Electricity cost remains stable", title: "Electricity Cost" },
-                x: x(new Date("2015")), y: yElectricity(0.1),
-                dy: -30, dx: -50
-            }
-        ];
+        // Add annotations for gas prices
+        const gasAnnotations = gasData.map(d => ({
+            note: { label: `Price: $${d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]}`, title: d3.timeFormat("%b-%Y")(d.Date) },
+            x: x(d.Date), y: y(+d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]),
+            dy: -10, dx: 10
+        }));
+
+        // Add annotations for electricity prices
+        const electricityAnnotations = electricityData.map(d => {
+            const months = Object.keys(d).slice(1);
+            return months.map((m, i) => ({
+                note: { label: `Price: $${d[m]}`, title: `${m}-${d.Year}` },
+                x: x(new Date(`${m}-01`)), y: yElectricity(+d[m]),
+                dy: -10, dx: 10
+            }));
+        }).flat();
+
+        const annotations = [...gasAnnotations, ...electricityAnnotations];
 
         const makeAnnotations = d3.annotation()
             .type(d3.annotationLabel)

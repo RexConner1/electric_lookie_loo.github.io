@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const width = 800;
-    const height = 600;
+    const width = 700;
+    const height = 500;
     const margin = { top: 20, right: 20, bottom: 30, left: 50 };
 
     const graphics3 = createGraphics('#scatter-plot', width, height, margin);
@@ -32,24 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         graphics3.svg.append('g')
             .call(d3.axisLeft(yHorsepower).ticks(10));
 
-        // Add Non-EV data points
-        graphics3.svg.selectAll('.non-ev')
-            .data(nonEvData)
-            .enter().append('circle')
-            .attr('class', 'non-ev')
-            .attr('cx', d => x(+d.price))
-            .attr('cy', d => yHorsepower(+d.horsepower))
-            .attr('r', 5)
-            .attr('fill', 'red')
-            .on('mouseover', function (event, d) {
-                graphics3.showTooltip(`Price: $${d.price}<br>Horsepower: ${d.horsepower}`, event.pageX, event.pageY);
-            })
-            .on('mouseout', function () {
-                graphics3.hideTooltip();
-            });
-
-        // Add EV data points
-        graphics3.svg.selectAll('.ev')
+        const evPoints = graphics3.svg.selectAll('.ev')
             .data(evData)
             .enter().append('circle')
             .attr('class', 'ev')
@@ -64,10 +47,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 graphics3.hideTooltip();
             });
 
-        console.log('Scatter plot created');
+        const nonEvPoints = graphics3.svg.selectAll('.non-ev')
+            .data(nonEvData)
+            .enter().append('circle')
+            .attr('class', 'non-ev')
+            .attr('cx', d => x(+d.price))
+            .attr('cy', d => yHorsepower(+d.horsepower))
+            .attr('r', 5)
+            .attr('fill', 'red')
+            .on('mouseover', function (event, d) {
+                graphics3.showTooltip(`Price: $${d.price}<br>Horsepower: ${d.horsepower}`, event.pageX, event.pageY);
+            })
+            .on('mouseout', function () {
+                graphics3.hideTooltip();
+            });
 
         graphics3.addAxisLabel('x', 'Price ($)');
         graphics3.addAxisLabel('y', 'Horsepower (Non-EV) / Range (EV)');
+
+        // Add annotations
+        const annotations = [
+            ...evData.map(d => ({
+                note: { label: `Price: $${d['Base MSRP']}<br>Range: ${d['Electric Range']} miles`, title: d.Make },
+                x: x(+d['Base MSRP']), y: yRange(+d['Electric Range']),
+                dy: -10, dx: 10
+            })),
+            ...nonEvData.map(d => ({
+                note: { label: `Price: $${d.price}<br>Horsepower: ${d.horsepower}`, title: d.CarName },
+                x: x(+d.price), y: yHorsepower(+d.horsepower),
+                dy: -10, dx: 10
+            }))
+        ];
+
+        const makeAnnotations = d3.annotation()
+            .type(d3.annotationLabel)
+            .annotations(annotations);
+
+        graphics3.svg.append("g")
+            .call(makeAnnotations);
+
     }).catch(error => {
         console.error('Error loading or processing CSV data:', error);
     });
