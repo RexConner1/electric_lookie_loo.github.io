@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const width = 650;
-    const height = 450;
-    const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+    const height = 300;
+    const margin = { top: 20, right: 20, bottom: 50, left: 60 };
 
     const graphics3 = createGraphics('#scatter-plot', width, height, margin);
 
@@ -60,28 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         graphics3.addAxisLabel('x', 'Price ($)');
         graphics3.addAxisLabel('y', 'Horsepower (Non-EV) / Range (EV)');
-
-        // Add annotations
-        const annotations = [
-            ...evData.map(d => ({
-                note: { label: `Price: $${d['Base MSRP']}<br>Range: ${d['Electric Range']} miles`, title: d.Make },
-                x: x(+d['Base MSRP']), y: yRange(+d['Electric Range']),
-                dy: -10, dx: 10
-            })),
-            ...nonEvData.map(d => ({
-                note: { label: `Price: $${d.price}<br>Horsepower: ${d.horsepower}`, title: d.CarName },
-                x: x(+d.price), y: yHorsepower(+d.horsepower),
-                dy: -10, dx: 10
-            }))
-        ];
-
-        const makeAnnotations = d3.annotation()
-            .type(d3.annotationLabel)
-            .annotations(annotations);
-
-        graphics3.svg.append("g")
-            .call(makeAnnotations);
-
     }).catch(error => {
         console.error('Error loading or processing CSV data:', error);
     });

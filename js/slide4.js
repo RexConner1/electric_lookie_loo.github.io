@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
     const width = 650;
-    const height = 450;
+    const height = 300;
     const margin = { top: 20, right: 30, bottom: 50, left: 60 };
 
     const graphics4 = createGraphics('#line-chart', width, height, margin);
 
     Promise.all([
-        d3.csv("data/gas_prices.csv"),
-        d3.csv("data/electricity_costs_kwh.csv")
+        d3.csv('data/gas_prices.csv'),
+        d3.csv('data/electricity_costs_kwh.csv')
     ]).then(([gasData, electricityData]) => {
         const parseDate = d3.timeParse("%b-%Y");
         gasData.forEach(d => d.Date = parseDate(d.Date));
@@ -55,31 +55,41 @@ document.addEventListener('DOMContentLoaded', function () {
         graphics4.addAxisLabel('x', 'Year');
         graphics4.addAxisLabel('y', 'Price (USD)');
 
-        // Add annotations for gas prices
-        const gasAnnotations = gasData.map(d => ({
-            note: { label: `Price: $${d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]}`, title: d3.timeFormat("%b-%Y")(d.Date) },
-            x: x(d.Date), y: y(+d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]),
-            dy: -10, dx: 10
-        }));
+        // Add tooltips for gas prices
+        graphics4.svg.selectAll('.gas-dot')
+            .data(gasData)
+            .enter().append('circle')
+            .attr('class', 'gas-dot')
+            .attr('cx', d => x(d.Date))
+            .attr('cy', d => y(+d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]))
+            .attr('r', 5)
+            .attr('fill', 'red')
+            .on('mouseover', function (event, d) {
+                graphics4.showTooltip(`Date: ${d3.timeFormat("%b-%Y")(d.Date)}<br>Price: $${d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]}`, event.pageX, event.pageY);
+            })
+            .on('mouseout', function () {
+                graphics4.hideTooltip();
+            });
 
-        // Add annotations for electricity prices
-        const electricityAnnotations = electricityData.map(d => {
+        // Add tooltips for electricity prices
+        electricityData.forEach(d => {
             const months = Object.keys(d).slice(1);
-            return months.map((m, i) => ({
-                note: { label: `Price: $${d[m]}`, title: `${m}-${d.Year}` },
-                x: x(new Date(`${m}-01`)), y: yElectricity(+d[m]),
-                dy: -10, dx: 10
-            }));
-        }).flat();
+            months.forEach(month => {
+                graphics4.svg.append('circle')
+                    .attr('class', 'electricity-dot')
+                    .attr('cx', x(new Date(`${month}-${d.Year}`)))
+                    .attr('cy', yElectricity(+d[month]))
+                    .attr('r', 5)
+                    .attr('fill', 'blue')
+                    .on('mouseover', function (event) {
+                        graphics4.showTooltip(`Year: ${d.Year}<br>Month: ${month}<br>Price: $${d[month]}`, event.pageX, event.pageY);
+                    })
+                    .on('mouseout', function () {
+                        graphics4.hideTooltip();
+                    });
+            });
+        });
 
-        const annotations = [...gasAnnotations, ...electricityAnnotations];
-
-        const makeAnnotations = d3.annotation()
-            .type(d3.annotationLabel)
-            .annotations(annotations);
-
-        graphics4.svg.append("g")
-            .call(makeAnnotations);
     }).catch(error => {
         console.error('Error loading or processing CSV data:', error);
     });

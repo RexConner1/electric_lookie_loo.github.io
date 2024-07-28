@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-    overflow: hidden;
+    overflow: hidden; /* Prevents scrolling */
 }
 
 #content {
@@ -12,15 +12,15 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Centers content horizontally */
     justify-content: center;
-    height: calc(100vh - 80px);
-    box-sizing: border-box;
+    height: calc(100vh - 80px); /* Ensures content fits within the viewport, leaving space for footer */
+    box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
 }
 
 .slide {
     display: none;
-    text-align: center;
+    text-align: center; /* Centers text content horizontally */
     width: 100%;
 }
 
@@ -29,8 +29,8 @@ body {
 }
 
 .pie-container, .scatter-container, .line-container {
-    width: 65%; /* Shrinks charts to fit all content */
-    height: calc(80vh - 200px); /* Adjusts chart height to fit within the viewport */
+    width: 60%; /* Shrinks charts to fit all content */
+    height: 50vh; /* Adjusts chart height to fit within the viewport */
     margin: 20px auto; /* Centers the charts horizontally */
 }
 
@@ -62,9 +62,9 @@ h2 {
 
 ul {
     padding-left: 20px;
-    text-align: left;
+    text-align: left; /* Ensures list items are aligned to the left */
     display: inline-block;
-    max-width: 80%;
+    max-width: 80%; /* Limits the width of the list */
     margin: 0 auto;
 }
 
