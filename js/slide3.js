@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const width = 700;
-    const height = 500;
+    const width = 650;
+    const height = 450;
     const margin = { top: 20, right: 20, bottom: 30, left: 50 };
 
     const graphics3 = createGraphics('#scatter-plot', width, height, margin);
@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
         d3.csv('data/ev_car_data.csv'),
         d3.csv('data/non_ev_car_data.csv')
     ]).then(([evData, nonEvData]) => {
-        console.log('CSV data loaded', { evData, nonEvData });
-
         const x = d3.scaleLinear()
             .domain([0, d3.max([...evData, ...nonEvData], d => +d.price)])
             .range([0, width]);
@@ -22,8 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const yRange = d3.scaleLinear()
             .domain([0, d3.max(evData, d => +d['Electric Range'])])
             .range([height, 0]);
-
-        console.log('Scales created', { x, yHorsepower, yRange });
 
         graphics3.svg.append('g')
             .attr('transform', `translate(0, ${height})`)

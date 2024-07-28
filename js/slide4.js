@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const width = 700;
-    const height = 500;
+    const width = 650;
+    const height = 450;
     const margin = { top: 20, right: 30, bottom: 50, left: 60 };
 
     const graphics4 = createGraphics('#line-chart', width, height, margin);

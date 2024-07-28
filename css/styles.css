@@ -29,9 +29,9 @@ body {
 }
 
 .pie-container, .scatter-container, .line-container {
-    width: 70%;
-    height: calc(80vh - 200px);
-    margin: 20px auto;
+    width: 65%; /* Shrinks charts to fit all content */
+    height: calc(80vh - 200px); /* Adjusts chart height to fit within the viewport */
+    margin: 20px auto; /* Centers the charts horizontally */
 }
 
 #navigation {
