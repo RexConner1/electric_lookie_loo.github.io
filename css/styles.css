@@ -34,10 +34,10 @@ body {
 }
 
 .chart-container {
-    width: 100%;
-    height: 60vh; /* Adjust the height to fit within the viewport */
+    width: 75%;
+    height: 45vh;
     max-width: 800px;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 #navigation {
