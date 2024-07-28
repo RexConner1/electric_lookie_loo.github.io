@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-    overflow: hidden; /* Prevents scrolling */
+    overflow: hidden;
 }
 
 #content {
@@ -12,10 +12,10 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centers content horizontally */
+    align-items: center;
     justify-content: center;
-    height: 90vh; /* Ensures content fits within the viewport */
-    box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+    height: calc(100vh - 100px);
+    box-sizing: border-box;
 }
 
 .slide {
@@ -29,15 +29,17 @@ body {
 }
 
 .pie-container, .scatter-container, .line-container {
-    width: 80%; /* Ensures charts are not too wide */
-    height: 500px;
-    margin: 20px auto; /* Centers the charts horizontally */
+    width: 80%;
+    height: calc(100vh - 200px);
+    margin: 20px auto;
 }
 
 #navigation {
     text-align: center;
-    margin-top: 20px;
     width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
 }
 
 #navigation button {
@@ -60,9 +62,9 @@ h2 {
 
 ul {
     padding-left: 20px;
-    text-align: left; /* Ensures list items are aligned to the left */
+    text-align: left;
     display: inline-block;
-    max-width: 80%; /* Limits the width of the list */
+    max-width: 80%;
     margin: 0 auto;
 }
 

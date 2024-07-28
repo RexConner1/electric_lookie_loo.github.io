@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const width = 600;
-    const height = 400;
-    const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+    const width = 800;
+    const height = 500;
+    const margin = { top: 20, right: 30, bottom: 50, left: 60 };
 
-    const graphics4 = createGraphics('#slide4', width, height, margin);
+    const graphics4 = createGraphics('#line-chart', width, height, margin);
 
     Promise.all([
         d3.csv("data/gas_prices.csv"),
@@ -15,36 +15,42 @@ document.addEventListener('DOMContentLoaded', function () {
         const x = d3.scaleTime().domain(d3.extent(gasData, d => d.Date)).range([0, width]);
         const y = d3.scaleLinear().domain([0, d3.max(gasData, d => +d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"])]).range([height, 0]);
 
-        graphics4.svg.append("g").attr("transform", `translate(0, ${height})`).call(d3.axisBottom(x));
-        graphics4.svg.append("g").call(d3.axisLeft(y));
+        const yElectricity = d3.scaleLinear().domain([0, d3.max(electricityData, d => d3.max(Object.values(d).slice(1).map(Number)))]).range([height, 0]);
 
-        graphics4.svg.append("path")
+        graphics4.svg.append('g')
+            .attr('transform', `translate(0, ${height})`)
+            .call(d3.axisBottom(x).ticks(5));
+
+        graphics4.svg.append('g')
+            .call(d3.axisLeft(y).ticks(5));
+
+        // Gas prices line
+        graphics4.svg.append('path')
             .datum(gasData)
-            .attr("fill", "none")
-            .attr("stroke", "red")
-            .attr("stroke-width", 1.5)
-            .attr("d", d3.line()
+            .attr('fill', 'none')
+            .attr('stroke', 'red')
+            .attr('stroke-width', 1.5)
+            .attr('d', d3.line()
                 .x(d => x(d.Date))
                 .y(d => y(+d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]))
             );
 
-        const electricityYears = electricityData.map(d => +d.Year);
-        const electricityPrices = electricityData.map(d => {
-            return { year: +d.Year, price: +d.AvgPrice };
+        // Electricity prices line
+        electricityData.forEach(d => {
+            const months = Object.keys(d).slice(1);
+            const prices = months.map(m => +d[m]);
+            const years = months.map(m => new Date(`${m}-01`));
+
+            graphics4.svg.append('path')
+                .datum(prices.map((price, i) => ({ date: years[i], price })))
+                .attr('fill', 'none')
+                .attr('stroke', 'blue')
+                .attr('stroke-width', 1.5)
+                .attr('d', d3.line()
+                    .x(d => x(d.date))
+                    .y(d => yElectricity(d.price))
+                );
         });
-
-        const x2 = d3.scaleLinear().domain(d3.extent(electricityYears)).range([0, width]);
-        const y2 = d3.scaleLinear().domain([0, d3.max(electricityPrices, d => d.price)]).range([height, 0]);
-
-        graphics4.svg.append("path")
-            .datum(electricityPrices)
-            .attr("fill", "none")
-            .attr("stroke", "blue")
-            .attr("stroke-width", 1.5)
-            .attr("d", d3.line()
-                .x(d => x2(d.year))
-                .y(d => y2(d.price))
-            );
 
         graphics4.addAxisLabel('x', 'Year');
         graphics4.addAxisLabel('y', 'Price (USD)');
@@ -58,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             {
                 note: { label: "Electricity cost remains stable", title: "Electricity Cost" },
-                x: x2(2015), y: y2(0.1),
+                x: x(new Date("2015")), y: yElectricity(0.1),
                 dy: -30, dx: -50
             }
         ];
@@ -69,46 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         graphics4.svg.append("g")
             .call(makeAnnotations);
-
-        graphics4.svg.append("path")
-            .datum(electricityPrices)
-            .attr("fill", "none")
-            .attr("stroke", "blue")
-            .attr("stroke-width", 1.5)
-            .attr("d", d3.line()
-                .x(d => x2(d.year))
-                .y(d => y2(d.price))
-            );
-
-        graphics4.addAxisLabel('x', 'Year');
-        graphics4.addAxisLabel('y', 'Price (Dollars per Gallon / Dollars per kWh)');
-
-        graphics4.svg.selectAll("circle")
-            .data(gasData)
-            .enter().append("circle")
-            .attr("cx", d => x(d.Date))
-            .attr("cy", d => y(+d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]))
-            .attr("r", 3)
-            .attr("fill", "red")
-            .on("mouseover", (event, d) => {
-                graphics4.showTooltip(`Date: ${d3.timeFormat("%b-%Y")(d.Date)}<br>Gas Price: $${d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]}`, event.pageX, event.pageY);
-            })
-            .on("mouseout", () => {
-                graphics4.hideTooltip();
-            });
-
-        graphics4.svg.selectAll("circle")
-            .data(electricityPrices)
-            .enter().append("circle")
-            .attr("cx", d => x2(d.year))
-            .attr("cy", d => y2(d.price))
-            .attr("r", 3)
-            .attr("fill", "blue")
-            .on("mouseover", (event, d) => {
-                graphics4.showTooltip(`Year: ${d.year}<br>Electricity Price: $${d.price} per kWh`, event.pageX, event.pageY);
-            })
-            .on("mouseout", () => {
-                graphics4.hideTooltip();
-            });
+    }).catch(error => {
+        console.error('Error loading or processing CSV data:', error);
     });
 });
