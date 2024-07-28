@@ -11,23 +11,92 @@
 </head>
 <body>
     <div id="content">
-        <div id="slide2" class="slide">
-            <div class="pie-container">
-                <div id="pie-chart"></div>
-                <div id="pie-legend"></div>
-            </div>
+        <div id="intro" class="slide active">
+            <h2>Introduction</h2>
+            <p>Welcome to the Electric Vehicle Data Visualization project. My name is David Orona, and I have created this interactive slideshow to explore the current landscape of electric vehicles (EVs) compared to traditional gasoline vehicles. This presentation aims to answer the following key question:</p>
+            <p><strong>What are the main factors driving the adoption of electric vehicles, and how do they compare to traditional gasoline vehicles in terms of cost and market trends?</strong></p>
+            <p>To address this question, we will examine various aspects of the EV market, including:</p>
+            <ul>
+                <li>The geographical distribution of electric vehicles</li>
+                <li>The popularity of different electric vehicle models</li>
+                <li>Price comparisons between electric and non-electric vehicles</li>
+                <li>Trends in fuel and electricity prices over time</li>
+            </ul>
+            <p>Each slide in this presentation provides a detailed analysis of these aspects using data visualizations created with D3.js. The goal is to provide a comprehensive understanding of the factors influencing the EV market and to highlight the potential benefits and challenges of transitioning to electric vehicles.</p>
+            <p>Let's dive into the data and explore the fascinating world of electric vehicles.</p>
         </div>
-        <div id="slide3" class="slide"></div>
-        <div id="slide4" class="slide"></div>
-    </div>
-    
-    <div id="navigation">
-        <button onclick="prevSlide()">Previous</button>
-        <button onclick="nextSlide()">Next</button>
+
+        <div id="slide2" class="slide">
+            <div>
+                <h2>Popular Electric Vehicle Models</h2>
+                <p>This pie chart represents the popularity of different electric vehicle models based on the number of registrations. Each section of the pie chart corresponds to a specific EV model, and the size of the section reflects the number of units registered.</p>
+                <p>Here are some key observations from the pie chart:</p>
+                <ul>
+                    <li><strong>Dominance of Tesla:</strong> Tesla has a significant market share in the EV industry, as indicated by the largest section of the pie chart. This dominance can be attributed to Tesla's strong brand recognition, advanced technology, and extensive charging network.</li>
+                    <li><strong>Diverse Market:</strong> The pie chart shows a wide variety of other EV models, indicating a diverse market with many manufacturers offering electric vehicles. This diversity is essential for healthy market competition and innovation.</li>
+                    <li><strong>Emerging Brands:</strong> Several newer brands are also represented in the pie chart, suggesting that the EV market is attracting new players who are eager to capitalize on the growing demand for electric vehicles.</li>
+                </ul>
+                <p>By hovering over each section, you can see the exact number of registrations for each model. This interactive feature helps users to explore the data in depth and understand the market dynamics better.</p>
+            </div>
+
+            <div id="pie-chart" class="pie-container"></div>
+        </div>
+
+        <div id="slide3" class="slide">
+            <div>
+                <h2>Price Comparison of Electric vs. Non-Electric Vehicles</h2>
+                <p>This scatter plot compares the prices of electric vehicles (EVs) and non-electric vehicles (Non-EVs). Each point represents a specific vehicle model, with red points indicating EVs and blue points indicating Non-EVs. The x-axis represents the price in dollars, while the y-axis shows horsepower for Non-EVs and range for EVs.</p>
+                <p>Here are some key observations from the scatter plot:</p>
+                <ul>
+                    <li><strong>EVs tend to cluster in the higher price range:</strong> Most EVs are priced above $20,000, with a significant number falling between $30,000 and $40,000.</li>
+                    <li><strong>Non-EVs show a broader price distribution:</strong> Non-EVs are spread across a wider price range, including many affordable options below $20,000.</li>
+                    <li><strong>Performance vs. Cost:</strong> For Non-EVs, higher horsepower models generally have higher prices, which aligns with expectations. For EVs, the range (miles per charge) also increases with price, reflecting advancements in battery technology and efficiency.</li>
+                    <li><strong>Outliers:</strong> There are a few outliers where certain Non-EVs are priced comparably to EVs but offer different performance metrics, suggesting a trade-off between traditional performance (horsepower) and electric efficiency (range).</li>
+                </ul>
+                <p>Hovering over each point in the scatter plot will provide specific details about the vehicle model, including its price and performance metrics. This interactive feature helps users to explore the data in depth and understand the nuances of the market better.</p>
+            </div>
+
+            <div id="bar-chart" class="bar-container"></div>
+        </div>
+        
+        <div id="slide4" class="slide">
+            <div>
+                <h2>Fuel vs. Electricity Prices Over Time</h2>
+                <p>This line chart shows the changes in gasoline and electricity prices over time. The x-axis represents the timeline, while the y-axis indicates the price levels. The chart includes multiple lines to represent different grades of gasoline as well as electricity prices.</p>
+                <p>Here are some key observations from the line chart:</p>
+                <ul>
+                    <li><strong>Volatility in Gasoline Prices:</strong> Gasoline prices have shown significant volatility over the years, with notable peaks around 2008, 2014, and 2022. These fluctuations can be attributed to various factors such as geopolitical events, changes in supply and demand, and economic conditions.</li>
+                    <li><strong>Gradual Increase in Electricity Prices:</strong> In contrast, electricity prices have generally shown a more gradual and steady increase over time. This stability is likely due to the more regulated nature of electricity markets and advancements in renewable energy sources.</li>
+                    <li><strong>Impact on EV Adoption:</strong> The relative stability of electricity prices compared to the volatility of gasoline prices may encourage more consumers to switch to electric vehicles. Consistent energy costs can provide a more predictable and potentially lower total cost of ownership for EVs.</li>
+                    <li><strong>Future Trends:</strong> Understanding these historical trends in fuel and electricity prices can help predict future cost implications for EV and non-EV owners. If the trends continue, EVs may become even more financially attractive in the long run.</li>
+                </ul>
+                <p>Hovering over different points on the lines will show the exact prices at specific times. This interactive feature allows users to explore the data in detail and understand the trends and patterns more comprehensively.</p>
+            </div>
+
+            <div id="line-chart" class="line-container"></div>
+        </div>
+
+        <div id="conclusion" class="slide">
+            <h2>Conclusion</h2>
+            <p>Thank you for exploring the Electric Vehicle Data Visualization project. Throughout this interactive slideshow, we have examined various aspects of the EV market, including the geographical distribution of electric vehicles, the popularity of different models, price comparisons with non-electric vehicles, and trends in fuel and electricity prices over time.</p>
+            <p>Key takeaways:</p>
+            <ul>
+                <li>Electric vehicles are gaining traction, with certain models and brands, particularly Tesla, dominating the market.</li>
+                <li>EVs are generally more expensive upfront compared to traditional vehicles but offer potential long-term savings due to lower fuel costs.</li>
+                <li>The stability of electricity prices compared to the volatility of gasoline prices can make EVs a more predictable and potentially cost-effective choice in the long run.</li>
+            </ul>
+            <p>By understanding these trends and data, consumers, policymakers, and industry stakeholders can make more informed decisions about the future of transportation. The transition to electric vehicles presents both opportunities and challenges, but with the right strategies and investments, it can lead to a more sustainable and efficient transportation system.</p>
+            <p>I hope this project has provided valuable insights into the electric vehicle market and its potential impact on the future of transportation. If you have any questions or would like to discuss the findings further, please feel free to reach out.</p>
+        </div>
+
+        <div id="navigation">
+            <button id="prev">Previous</button>
+            <button id="next">Next</button>
+        </div>
     </div>
 
-    <script src="js/navigation.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/slide2.js"></script>
     <script src="js/slide3.js"></script>
     <script src="js/slide4.js"></script>

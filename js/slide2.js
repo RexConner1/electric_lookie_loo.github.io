@@ -1,13 +1,10 @@
-// js/slide2.js
-
 document.addEventListener('DOMContentLoaded', function () {
     const width = 800;
     const height = 600;
     const radius = Math.min(width, height) / 2;
+    const margin = { top: 20, right: 20, bottom: 30, left: 50 };
 
-    const graphics2 = new Graphics(width, height);
-    graphics2.createSVG('#pie-chart');
-    graphics2.createTooltip();
+    const graphics2 = createGraphics('#pie-chart', width, height, margin);
 
     const g = graphics2.svg.append('g')
         .attr('transform', `translate(${width / 2}, ${height / 2})`);
