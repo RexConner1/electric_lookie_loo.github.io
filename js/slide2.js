@@ -1,15 +1,16 @@
+// js/slide2.js
+
 document.addEventListener('DOMContentLoaded', function () {
     const width = 800;
     const height = 600;
     const radius = Math.min(width, height) / 2;
 
     const graphics2 = new Graphics(width, height);
-    graphics2.createSVG('#slide2');
+    graphics2.createSVG('#pie-chart');
     graphics2.createTooltip();
 
     const g = graphics2.svg.append('g')
         .attr('transform', `translate(${width / 2}, ${height / 2})`);
-
     const pie = d3.pie().value(d => d.count);
     const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .domain(pieData.map(d => d.make))
             .range(d3.schemeCategory10);
 
+        // Draw the pie chart
         const slices = g.selectAll('path')
             .data(pie(pieData))
             .enter().append('path')
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const [x, y] = d3.pointer(event);
                 graphics2.showTooltip(`Make: ${d.data.make}<br>Count: ${d.data.count}`, x, y);
 
+                // Text on hover
                 g.append('text')
                     .attr('id', 'hover-text')
                     .attr('transform', `translate(${arc.centroid(d)})`)
@@ -49,11 +52,13 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .on('mouseout', function () {
                 graphics2.hideTooltip();
+                // Remove text when not hovering
                 g.select('#hover-text').remove();
             });
 
-        const legend = graphics2.svg.append('g')
-            .attr('transform', `translate(${width - 150}, ${height / 2 - pieData.length * 10})`);
+        const legend = d3.select('#pie-legend').append('svg')
+            .attr('width', 150)
+            .attr('height', pieData.length * 20);
 
         pieData.forEach((d, i) => {
             const legendRow = legend.append('g')
