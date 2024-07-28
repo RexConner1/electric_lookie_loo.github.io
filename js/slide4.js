@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const width = 650;
-    const height = 300;
+    const width = document.documentElement.clientWidth * 0.6;
+    const height = document.documentElement.clientHeight * 0.5;
     const margin = { top: 20, right: 30, bottom: 50, left: 60 };
 
     const graphics4 = createGraphics('#line-chart', width, height, margin);
@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr('stroke', 'red')
             .attr('stroke-width', 1.5)
             .attr('d', d3.line()
-                .x(d => x(d.Date))
-                .y(d => y(+d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]))
-            );
+            .x(d => x(d.Date))
+            .y(d => y(+d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]))
+        );
 
         // Electricity prices line
         electricityData.forEach(d => {

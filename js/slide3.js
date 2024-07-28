@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const width = 650;
-    const height = 300;
+    const width = document.documentElement.clientWidth * 0.6;
+    const height = document.documentElement.clientHeight * 0.5;
     const margin = { top: 20, right: 20, bottom: 50, left: 60 };
 
     const graphics3 = createGraphics('#scatter-plot', width, height, margin);
