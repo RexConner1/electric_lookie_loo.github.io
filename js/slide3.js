@@ -9,8 +9,12 @@ Promise.all([
     const x = d3.scaleLinear().domain([0, d3.max(nonEvData, d => +d.price)]).range([0, graphics3.width]);
     const y = d3.scaleLinear().domain([0, d3.max(nonEvData, d => +d.horsepower)]).range([graphics3.height, 0]);
 
-    graphics3.svg.append("g").attr("transform", `translate(0, ${graphics3.height})`).call(d3.axisBottom(x));
-    graphics3.svg.append("g").call(d3.axisLeft(y));
+    graphics3.svg.append("g")
+        .attr("transform", `translate(0, ${graphics3.height})`)
+        .call(d3.axisBottom(x));
+
+    graphics3.svg.append("g")
+        .call(d3.axisLeft(y));
 
     graphics3.svg.selectAll("circle.non-ev")
         .data(nonEvData)

@@ -22,14 +22,13 @@ Promise.all([
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(d => x(d.Date))
-            .y(d => y(d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]))
+            .y(d => y(+d["Washington Regular All Formulations Retail Gasoline Prices (Dollars per Gallon)"]))
         );
 
     const electricityYears = electricityData.map(d => +d.Year);
-    const electricityPrices = electricityYears.map(year => ({
-        year: year,
-        price: d3.mean(Object.values(electricityData.find(d => +d.Year === year)).slice(1).map(d => +d))
-    }));
+    const electricityPrices = electricityData.map(d => {
+        return { year: +d.Year, price: +d.AvgPrice };
+    });
 
     const x2 = d3.scaleLinear().domain(d3.extent(electricityYears)).range([0, graphics4.width]);
     const y2 = d3.scaleLinear().domain([0, d3.max(electricityPrices, d => d.price)]).range([graphics4.height, 0]);

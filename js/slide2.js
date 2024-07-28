@@ -24,8 +24,17 @@ d3.csv("data/ev_car_data.csv").then(data => {
             graphics2.hideTooltip();
         });
 
-    graphics2.svg.append("g").attr("transform", `translate(0, ${graphics2.height})`).call(d3.axisBottom(x));
-    graphics2.svg.append("g").call(d3.axisLeft(y));
+    graphics2.svg.append("g")
+        .attr("transform", `translate(0, ${graphics2.height})`)
+        .call(d3.axisBottom(x).tickSizeOuter(0))
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em')
+        .attr('transform', 'rotate(-65)');
+
+    graphics2.svg.append("g")
+        .call(d3.axisLeft(y));
 
     graphics2.addAxisLabel('x', 'Electric Vehicle Models');
     graphics2.addAxisLabel('y', 'Number of Vehicles');

@@ -3,7 +3,7 @@ class Graphics {
         this.width = width;
         this.height = height;
         this.svg = null;
-        this.margin = { top: 20, right: 20, bottom: 50, left: 50 };
+        this.margin = { top: 20, right: 20, bottom: 60, left: 70 }; // Increased margins
     }
 
     createSVG(selector) {
@@ -43,7 +43,7 @@ class Graphics {
             this.svg.append('text')
                 .attr('class', 'x-axis-label')
                 .attr('x', this.width / 2)
-                .attr('y', this.height + this.margin.bottom - 10)
+                .attr('y', this.height + this.margin.bottom - 20) // Adjusted padding
                 .style('text-anchor', 'middle')
                 .text(label);
         } else if (axis === 'y') {
@@ -51,7 +51,7 @@ class Graphics {
                 .attr('class', 'y-axis-label')
                 .attr('transform', 'rotate(-90)')
                 .attr('x', -this.height / 2)
-                .attr('y', -this.margin.left + 20)
+                .attr('y', -this.margin.left + 20) // Adjusted padding
                 .style('text-anchor', 'middle')
                 .text(label);
         }
