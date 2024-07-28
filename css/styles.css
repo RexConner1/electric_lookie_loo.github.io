@@ -27,7 +27,7 @@ h1, h2 {
     text-align: center;
 }
 
-#ev-distribution, #price-comparison, #ev-models {
+.chart {
     width: 100%;
     height: 500px;
 }

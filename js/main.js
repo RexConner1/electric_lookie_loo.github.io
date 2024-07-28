@@ -1,20 +1,37 @@
-let currentSlide = 0;
-const slides = document.querySelectorAll('.slide');
-
-function showSlide(index) {
-    slides[currentSlide].classList.remove('active');
-    currentSlide = index;
-    slides[currentSlide].classList.add('active');
-}
-
-function nextSlide() {
-    if (currentSlide < slides.length - 1) {
-        showSlide(currentSlide + 1);
+class Graphics {
+    constructor(width, height) {
+        this.width = width;
+        this.height = height;
+        this.svg = null;
     }
-}
 
-function prevSlide() {
-    if (currentSlide > 0) {
-        showSlide(currentSlide - 1);
+    createSVG(selector) {
+        this.svg = d3.select(selector).append('svg')
+            .attr('width', this.width)
+            .attr('height', this.height);
+    }
+
+    createTooltip() {
+        d3.select('body').append('div')
+            .attr('id', 'tooltip')
+            .style('position', 'absolute')
+            .style('background-color', 'white')
+            .style('border', '1px solid black')
+            .style('padding', '5px')
+            .style('font-size', '12px')
+            .style('font-family', 'Arial')
+            .style('display', 'none');
+    }
+
+    showTooltip(html, x, y) {
+        d3.select('#tooltip')
+            .html(html)
+            .style('left', `${x + 5}px`)
+            .style('top', `${y + 5}px`)
+            .style('display', 'block');
+    }
+
+    hideTooltip() {
+        d3.select('#tooltip').style('display', 'none');
     }
 }
