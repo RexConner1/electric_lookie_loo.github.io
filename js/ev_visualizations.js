@@ -24,10 +24,24 @@ d3.csv('data/cleaned_ev_data.csv').then(evData => {
             .enter().append('circle')
             .attr('cx', d => projection([+d.Longitude, +d.Latitude])[0])
             .attr('cy', d => projection([+d.Longitude, +d.Latitude])[1])
-            .attr('r', 2)
+            .attr('r', 3)
             .attr('fill', 'red')
-            .append('title')
-            .text(d => `${d.City}: ${d['Make']} ${d['Model']}`);
+            .on('mouseover', function(event, d) {
+                d3.select(this).attr('r', 6);
+                const [x, y] = projection([+d.Longitude, +d.Latitude]);
+                svg.append('text')
+                    .attr('x', x + 5)
+                    .attr('y', y - 5)
+                    .attr('id', 'tooltip')
+                    .attr('font-size', '12px')
+                    .attr('font-family', 'Arial')
+                    .attr('fill', 'black')
+                    .text(`${d.City}: ${d.Make} ${d.Model}`);
+            })
+            .on('mouseout', function() {
+                d3.select(this).attr('r', 3);
+                d3.select('#tooltip').remove();
+            });
     });
 
     // Slide 3: EV Models Chart
@@ -35,91 +49,164 @@ d3.csv('data/cleaned_ev_data.csv').then(evData => {
         .attr('width', width)
         .attr('height', height);
 
-    const types = Array.from(new Set(evData.map(d => d['Electric Vehicle Type'])));
-    const typeCounts = types.map(type => ({
-        type: type,
-        count: evData.filter(d => d['Electric Vehicle Type'] === type).length
+    const models = Array.from(new Set(evData.map(d => d.Model)));
+    const modelCounts = models.map(model => ({
+        model: model,
+        count: evData.filter(d => d.Model === model).length
     }));
 
-    const x = d3.scaleBand().domain(types).range([0, width]).padding(0.1);
-    const y = d3.scaleLinear().domain([0, d3.max(typeCounts, d => d.count)]).range([height, 0]);
+    const x = d3.scaleBand().domain(models).range([0, width]).padding(0.1);
+    const y = d3.scaleLinear().domain([0, d3.max(modelCounts, d => d.count)]).range([height, 0]);
 
     svg2.selectAll('.bar')
-        .data(typeCounts)
+        .data(modelCounts)
         .enter().append('rect')
         .attr('class', 'bar')
-        .attr('x', d => x(d.type))
+        .attr('x', d => x(d.model))
         .attr('y', d => y(d.count))
         .attr('width', x.bandwidth())
         .attr('height', d => height - y(d.count))
-        .attr('fill', 'blue');
+        .attr('fill', 'blue')
+        .on('mouseover', function(event, d) {
+            d3.select(this).attr('fill', 'orange');
+            const [x, y] = [event.pageX, event.pageY];
+            d3.select('body').append('div')
+                .attr('id', 'tooltip')
+                .style('position', 'absolute')
+                .style('left', `${x + 5}px`)
+                .style('top', `${y + 5}px`)
+                .style('background-color', 'white')
+                .style('border', '1px solid black')
+                .style('padding', '5px')
+                .style('font-size', '12px')
+                .style('font-family', 'Arial')
+                .html(`Model: ${d.model}<br>Count: ${d.count}`);
+        })
+        .on('mouseout', function() {
+            d3.select(this).attr('fill', 'blue');
+            d3.select('#tooltip').remove();
+        });
 
     svg2.append('g').attr('transform', `translate(0, ${height})`).call(d3.axisBottom(x));
     svg2.append('g').call(d3.axisLeft(y));
-});
 
-d3.csv('data/cleaned_car_data.csv').then(carData => {
     // Slide 4: Car Price Comparison Chart
-    const svg3 = d3.select('#car-price-comparison-chart').append('svg')
-        .attr('width', 800)
-        .attr('height', 600);
+    d3.csv('data/cleaned_car_data.csv').then(carData => {
+        const svg3 = d3.select('#car-price-comparison-chart').append('svg')
+            .attr('width', width)
+            .attr('height', height);
 
-    const carTypes = carData.map(d => d.CarName);
-    const carPrices = carData.map(d => +d.price);
+        const carTypes = Array.from(new Set(carData.map(d => d.CarType)));
+        const carTypePrices = carTypes.map(type => ({
+            type: type,
+            price: d3.mean(carData.filter(d => d.CarType === type), d => +d.Price)
+        }));
 
-    const x = d3.scaleBand().domain(carTypes).range([0, 800]).padding(0.1);
-    const y = d3.scaleLinear().domain([0, d3.max(carPrices)]).range([600, 0]);
+        const x = d3.scaleBand().domain(carTypes).range([0, width]).padding(0.1);
+        const y = d3.scaleLinear().domain([0, d3.max(carTypePrices, d => d.price)]).range([height, 0]);
 
-    svg3.selectAll('.bar')
-        .data(carData)
-        .enter().append('rect')
-        .attr('class', 'bar')
-        .attr('x', d => x(d.CarName))
-        .attr('y', d => y(+d.price))
-        .attr('width', x.bandwidth())
-        .attr('height', d => 600 - y(+d.price))
-        .attr('fill', d => d.fueltype === 'electric' ? 'green' : 'red');
+        svg3.selectAll('.bar')
+            .data(carTypePrices)
+            .enter().append('rect')
+            .attr('class', 'bar')
+            .attr('x', d => x(d.type))
+            .attr('y', d => y(d.price))
+            .attr('width', x.bandwidth())
+            .attr('height', d => height - y(d.price))
+            .attr('fill', d => d.type.includes('Electric') ? 'green' : 'gray')
+            .on('mouseover', function(event, d) {
+                d3.select(this).attr('fill', 'orange');
+                const [x, y] = [event.pageX, event.pageY];
+                d3.select('body').append('div')
+                    .attr('id', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('left', `${x + 5}px`)
+                    .style('top', `${y + 5}px`)
+                    .style('background-color', 'white')
+                    .style('border', '1px solid black')
+                    .style('padding', '5px')
+                    .style('font-size', '12px')
+                    .style('font-family', 'Arial')
+                    .html(`Type: ${d.type}<br>Price: $${d.price.toFixed(2)}`);
+            })
+            .on('mouseout', function() {
+                d3.select(this).attr('fill', d => d.type.includes('Electric') ? 'green' : 'gray');
+                d3.select('#tooltip').remove();
+            });
 
-    svg3.append('g').attr('transform', 'translate(0, 600)').call(d3.axisBottom(x)).selectAll('text')
-        .attr('transform', 'rotate(-45)')
-        .attr('text-anchor', 'end');
-    svg3.append('g').call(d3.axisLeft(y));
+        svg3.append('g').attr('transform', `translate(0, ${height})`).call(d3.axisBottom(x));
+        svg3.append('g').call(d3.axisLeft(y));
+    });
+
+    // Slide 5: Fuel and Electricity Prices Chart
+    d3.csv('data/fuel_prices.csv').then(fuelData => {
+        const svg4 = d3.select('#fuel-electricity-prices-chart').append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
+        const years = Array.from(new Set(fuelData.map(d => d.Year)));
+        const x = d3.scaleBand().domain(years).range([0, width]).padding(0.1);
+        const y = d3.scaleLinear().domain([0, d3.max(fuelData, d => Math.max(d.GasPrice, d.ElectricityPrice))]).range([height, 0]);
+
+        svg4.selectAll('.bar-gas')
+            .data(fuelData)
+            .enter().append('rect')
+            .attr('class', 'bar-gas')
+            .attr('x', d => x(d.Year))
+            .attr('y', d => y(d.GasPrice))
+            .attr('width', x.bandwidth() / 2)
+            .attr('height', d => height - y(d.GasPrice))
+            .attr('fill', 'red')
+            .on('mouseover', function(event, d) {
+                d3.select(this).attr('fill', 'orange');
+                const [x, y] = [event.pageX, event.pageY];
+                d3.select('body').append('div')
+                    .attr('id', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('left', `${x + 5}px`)
+                    .style('top', `${y + 5}px`)
+                    .style('background-color', 'white')
+                    .style('border', '1px solid black')
+                    .style('padding', '5px')
+                    .style('font-size', '12px')
+                    .style('font-family', 'Arial')
+                    .html(`Year: ${d.Year}<br>Gas Price: $${d.GasPrice.toFixed(2)}`);
+            })
+            .on('mouseout', function() {
+                d3.select(this).attr('fill', 'red');
+                d3.select('#tooltip').remove();
+            });
+
+        svg4.selectAll('.bar-electricity')
+            .data(fuelData)
+            .enter().append('rect')
+            .attr('class', 'bar-electricity')
+            .attr('x', d => x(d.Year) + x.bandwidth() / 2)
+            .attr('y', d => y(d.ElectricityPrice))
+            .attr('width', x.bandwidth() / 2)
+            .attr('height', d => height - y(d.ElectricityPrice))
+            .attr('fill', 'blue')
+            .on('mouseover', function(event, d) {
+                d3.select(this).attr('fill', 'orange');
+                const [x, y] = [event.pageX, event.pageY];
+                d3.select('body').append('div')
+                    .attr('id', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('left', `${x + 5}px`)
+                    .style('top', `${y + 5}px`)
+                    .style('background-color', 'white')
+                    .style('border', '1px solid black')
+                    .style('padding', '5px')
+                    .style('font-size', '12px')
+                    .style('font-family', 'Arial')
+                    .html(`Year: ${d.Year}<br>Electricity Price: $${d.ElectricityPrice.toFixed(2)}`);
+            })
+            .on('mouseout', function() {
+                d3.select(this).attr('fill', 'blue');
+                d3.select('#tooltip').remove();
+            });
+
+        svg4.append('g').attr('transform', `translate(0, ${height})`).call(d3.axisBottom(x));
+        svg4.append('g').call(d3.axisLeft(y));
+    });
 });
-
-// Slide 5: Fuel and Electricity Prices
-const fuelData = [
-    { year: 2020, gasPrice: 2.5, electricityPrice: 0.12 },
-    { year: 2021, gasPrice: 3.0, electricityPrice: 0.13 },
-    { year: 2022, gasPrice: 3.5, electricityPrice: 0.14 },
-    { year: 2023, gasPrice: 4.0, electricityPrice: 0.15 }
-];
-
-const svg4 = d3.select('#fuel-electricity-prices-chart').append('svg')
-    .attr('width', 800)
-    .attr('height', 600);
-
-const x = d3.scaleBand().domain(fuelData.map(d => d.year)).range([0, 800]).padding(0.1);
-const y = d3.scaleLinear().domain([0, d3.max(fuelData, d => Math.max(d.gasPrice, d.electricityPrice))]).range([600, 0]);
-
-svg4.selectAll('.bar-gas')
-    .data(fuelData)
-    .enter().append('rect')
-    .attr('class', 'bar-gas')
-    .attr('x', d => x(d.year))
-    .attr('y', d => y(d.gasPrice))
-    .attr('width', x.bandwidth() / 2)
-    .attr('height', d => 600 - y(d.gasPrice))
-    .attr('fill', 'red');
-
-svg4.selectAll('.bar-electricity')
-    .data(fuelData)
-    .enter().append('rect')
-    .attr('class', 'bar-electricity')
-    .attr('x', d => x(d.year) + x.bandwidth() / 2)
-    .attr('y', d => y(d.electricityPrice))
-    .attr('width', x.bandwidth() / 2)
-    .attr('height', d => 600 - y(d.electricityPrice))
-    .attr('fill', 'blue');
-
-svg4.append('g').attr('transform', 'translate(0, 600)').call(d3.axisBottom(x));
-svg4.append('g').call(d3.axisLeft(y));
