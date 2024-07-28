@@ -1,41 +1,76 @@
-const graphics2 = new Graphics(600, 400);
-graphics2.createSVG('#slide2');
-graphics2.createTooltip();
+document.addEventListener('DOMContentLoaded', function () {
+    const width = 800;
+    const height = 600;
+    const radius = Math.min(width, height) / 2;
 
-d3.csv("data/ev_car_data.csv").then(data => {
-    const modelCount = d3.rollups(data, v => v.length, d => d.Model);
-    const sortedData = modelCount.sort((a, b) => b[1] - a[1]).slice(0, 10); // Top 10 models
+    const graphics2 = new Graphics(width, height);
+    graphics2.createSVG('#slide2');
+    graphics2.createTooltip();
 
-    const x = d3.scaleBand().domain(sortedData.map(d => d[0])).range([0, graphics2.width]).padding(0.1);
-    const y = d3.scaleLinear().domain([0, d3.max(sortedData, d => d[1])]).range([graphics2.height, 0]);
+    const g = graphics2.svg.append('g')
+        .attr('transform', `translate(${width / 2}, ${height / 2})`);
 
-    graphics2.svg.append("g").selectAll("rect")
-        .data(sortedData)
-        .enter().append("rect")
-        .attr("x", d => x(d[0]))
-        .attr("y", d => y(d[1]))
-        .attr("width", x.bandwidth())
-        .attr("height", d => graphics2.height - y(d[1]))
-        .attr("fill", "steelblue")
-        .on("mouseover", (event, d) => {
-            graphics2.showTooltip(`Model: ${d[0]}<br>Count: ${d[1]}`, event.pageX, event.pageY);
-        })
-        .on("mouseout", () => {
-            graphics2.hideTooltip();
+    const pie = d3.pie().value(d => d.count);
+    const arc = d3.arc().innerRadius(0).outerRadius(radius);
+
+    d3.csv('data/ev_car_data.csv').then(data => {
+        const modelCount = d3.rollup(
+            data,
+            v => v.length,
+            d => d.Make
+        );
+
+        const pieData = Array.from(modelCount, ([make, count]) => ({ make, count }));
+
+        const color = d3.scaleOrdinal()
+            .domain(pieData.map(d => d.make))
+            .range(d3.schemeCategory10);
+
+        const slices = g.selectAll('path')
+            .data(pie(pieData))
+            .enter().append('path')
+            .attr('d', arc)
+            .attr('fill', d => color(d.data.make))
+            .on('mouseover', function (event, d) {
+                const [x, y] = d3.pointer(event);
+                graphics2.showTooltip(`Make: ${d.data.make}<br>Count: ${d.data.count}`, x, y);
+            })
+            .on('mousemove', function (event) {
+                const [x, y] = d3.pointer(event);
+                graphics2.showTooltip('', x, y);
+            })
+            .on('mouseout', function () {
+                graphics2.hideTooltip();
+            });
+
+        const label = d3.arc().innerRadius(radius - 80).outerRadius(radius);
+        g.selectAll('text')
+            .data(pie(pieData))
+            .enter().append('text')
+            .attr('transform', d => `translate(${label.centroid(d)})`)
+            .attr('dy', '0.35em')
+            .style('text-anchor', 'middle')
+            .style('font-size', '12px')
+            .text(d => d.data.make);
+
+        const legend = graphics2.svg.append('g')
+            .attr('transform', `translate(${width - 150}, ${height / 2 - pieData.length * 10})`);
+
+        pieData.forEach((d, i) => {
+            const legendRow = legend.append('g')
+                .attr('transform', `translate(0, ${i * 20})`);
+
+            legendRow.append('rect')
+                .attr('width', 10)
+                .attr('height', 10)
+                .attr('fill', color(d.make));
+
+            legendRow.append('text')
+                .attr('x', 20)
+                .attr('y', 10)
+                .style('text-anchor', 'start')
+                .style('font-size', '12px')
+                .text(d.make);
         });
-
-    graphics2.svg.append("g")
-        .attr("transform", `translate(0, ${graphics2.height})`)
-        .call(d3.axisBottom(x).tickSizeOuter(0))
-        .selectAll('text')
-        .style('text-anchor', 'end')
-        .attr('dx', '-.8em')
-        .attr('dy', '.15em')
-        .attr('transform', 'rotate(-65)');
-
-    graphics2.svg.append("g")
-        .call(d3.axisLeft(y));
-
-    graphics2.addAxisLabel('x', 'Electric Vehicle Models');
-    graphics2.addAxisLabel('y', 'Number of Vehicles');
+    });
 });
